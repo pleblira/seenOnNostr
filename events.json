@@ -1,0 +1,64 @@
+[
+    [
+        "EVENT",
+        "b8968a501cce11ee9152804a14673ee3",
+        {
+            "content": "replying for it to be picked up 2 #seenOnNostr",
+            "created_at": 1688736844,
+            "id": "cd01b0d5a972c9cfc746226820ca3abfbb079b92d1416081447a8bb370aead0a",
+            "kind": 1,
+            "pubkey": "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a",
+            "sig": "1fde0bde3e46e22a281af665ab916d5b83689bf81ce96bd6adc373cf575b094137aa4fb45e9701100638e98a39c7a64725998750a624df0bda21bb183d54b2ad",
+            "tags": [
+                [
+                    "e",
+                    "0af701cd7b904dba65c806d6dd9a6c2a7c19126fa5a91c8d11f2ccd0c010a5d8",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a"
+                ],
+                [
+                    "t",
+                    "seenOnNostr"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-07T10:01:10.937179"
+        }
+    ],
+    [
+        "EVENT",
+        "b8968a501cce11ee9152804a14673ee3",
+        {
+            "content": "replying to be picked up by #seenOnNostr",
+            "created_at": 1688738365,
+            "id": "8d122fdf5ffee1d6c0bc579216dbe5dd1544dd6553cc94a3dc4b5ce55f16aca2",
+            "kind": 1,
+            "pubkey": "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a",
+            "sig": "3f377cc51b315325abe51406d14c0b7d03afdf8580e253048c1fcdccb044226445e1eb4b8d38eca2ede20f619282aca2e629f11fc132400b371fd1a0cf539975",
+            "tags": [
+                [
+                    "e",
+                    "0af701cd7b904dba65c806d6dd9a6c2a7c19126fa5a91c8d11f2ccd0c010a5d8",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a"
+                ],
+                [
+                    "t",
+                    "seenOnNostr"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-07T10:01:10.635312"
+        }
+    ]
+,["EVENT", "c8c36c4a1cce11ee9152804a14673ee3", {"content": "replying #seenOnNostr", "created_at": 1688738490, "id": "030f385b8f4bf4f60fd33d8a469fad6f7aaefebf6bcd8ea3424be88fe6eb3570", "kind": 1, "pubkey": "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a", "sig": "d10f276b7dfff97a9ebab11b458d96a73fff5b4295d4862078f063cc45e263172eb2609f02940590e425515d9b1e9da323fbd0351d0e3f3dc643ad8fc349f044", "tags": [["e", "0af701cd7b904dba65c806d6dd9a6c2a7c19126fa5a91c8d11f2ccd0c010a5d8", "", "root"], ["p", "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a"], ["t", "seenOnNostr"]]}, {"datetime_event_was_queried": "2023-07-07T10:01:37.777772"}]]
