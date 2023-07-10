@@ -5,7 +5,7 @@
 
 import typing
 
-from cryptography import utils
+from . import utils
 
 if typing.TYPE_CHECKING:
     from cryptography.hazmat.bindings._rust import openssl as rust_openssl

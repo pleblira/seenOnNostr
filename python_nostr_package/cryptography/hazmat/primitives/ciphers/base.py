@@ -6,13 +6,13 @@
 import abc
 import typing
 
-from cryptography.exceptions import (
+from ....exceptions import (
     AlreadyFinalized,
     AlreadyUpdated,
     NotYetFinalized,
 )
-from cryptography.hazmat.primitives._cipheralgorithm import CipherAlgorithm
-from cryptography.hazmat.primitives.ciphers import modes
+from .._cipheralgorithm import CipherAlgorithm
+from ..ciphers import modes
 
 if typing.TYPE_CHECKING:
     from cryptography.hazmat.backends.openssl.ciphers import (

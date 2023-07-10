@@ -8,7 +8,6 @@ import json
 import time
 import ssl
 
-
 def query_user_display_name(author_pubkey):
 
   subscription_id = uuid.uuid1().hex

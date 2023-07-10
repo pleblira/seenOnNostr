@@ -12,7 +12,7 @@ import datetime
 import uuid
 import json
 
-def set_query_filters(public_key, since, type_of_query, query_term):
+def set_query_filters(since, type_of_query, query_term):
 
   if since == 0:
     with open('events.json','r') as f:
@@ -27,9 +27,17 @@ def set_query_filters(public_key, since, type_of_query, query_term):
     filter = Filter(kinds=[EventKind.TEXT_NOTE], since=since)
     filter.add_arbitrary_tag("#t",[query_term])
     filters = Filters([filter])
-  elif type_of_query == "specific_event":
+  if type_of_query == "user_tag":
+    filter = Filter(kinds=[EventKind.TEXT_NOTE], since=since)
+    filter.add_arbitrary_tag("#p",[[query_term]])
+    filters = Filters([filter])
+  elif type_of_query == "individual_event":
     # query a specific event from relays, based on event_id hex
     filters = Filters([Filter(event_ids=[query_term])])
+  elif type_of_query == "npub":
+    # query all events from a npub. npub is a list.
+    print("npub query")
+    filters = Filters([Filter(authors=[query_term], kinds=[EventKind.TEXT_NOTE])])
 
   # setting filters
 
@@ -38,8 +46,6 @@ def set_query_filters(public_key, since, type_of_query, query_term):
 
   # query events since and until specific dates
   # filters = Filters([Filter(authors=[public_key], kinds=[EventKind.TEXT_NOTE], since=1683602000, until=1676091000)])
-
-
 
   request = [ClientMessageType.REQUEST, subscription_id]
   request.extend(filters.to_json_array())

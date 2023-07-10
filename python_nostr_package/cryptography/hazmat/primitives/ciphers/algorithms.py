@@ -3,8 +3,8 @@
 # for complete details.
 
 
-from cryptography import utils
-from cryptography.hazmat.primitives.ciphers import (
+from .... import utils
+from ..ciphers import (
     BlockCipherAlgorithm,
     CipherAlgorithm,
 )

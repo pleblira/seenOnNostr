@@ -1,6 +1,5 @@
 wss://relay.damus.io
 wss://nos.lol
-wss://nostr.wine
 wss://relay.snort.social
-wss://free.nostr.lc
 wss://relay.nostr.bg
+wss://nostr.wine

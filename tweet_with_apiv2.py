@@ -13,11 +13,14 @@ consumer_secret = os.environ.get("CONSUMER_SECRET")
 access_token = os.environ.get("ACCESS_TOKEN")
 access_token_secret = os.environ.get("ACCESS_TOKEN_SECRET")
 
-def tweet_with_apiv2(tweet_message):
+def tweet_with_apiv2(tweet_message, media_list):
 
     # exclude_reply_user_ids = get_exclude_reply_user_ids(scraped_tweet)
     # payload = {"text": tweet_message, "reply":{"in_reply_to_tweet_id":str(scraped_tweet['id']), "exclude_reply_user_ids": exclude_reply_user_ids}}
-    payload = {"text": tweet_message}
+    if media_list == []:
+        payload = {"text": tweet_message}
+    else:
+        payload = {"text": tweet_message, "media": {"media_ids": media_list}}
 
     # Make the request
     oauth = OAuth1Session(
@@ -43,3 +46,5 @@ def tweet_with_apiv2(tweet_message):
     # Saving the response as JSON
     json_response = response.json()
     print(json.dumps(json_response, indent=4, sort_keys=True))
+
+    return json_response["data"]["id"]

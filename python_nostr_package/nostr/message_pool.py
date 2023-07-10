@@ -54,11 +54,11 @@ class MessagePool:
     def _process_message(self, message: str, url: str):
         message_json = json.loads(message)
         message_type = message_json[0]
-        print(f"Message json on message pool from relay {url}: {message_json}")
+        # print(f"Message json on message pool from relay {url}: {message_json}")
         # print(f"\nMessage json on message pool {self.relay_url}: {message_json}")
-        if message_json[0] == "EVENT":
-            print(f"\n>> Poster's profile on snort.social: https://snort.social/p/{PublicKey.hex_to_bech32(message_json[2]['pubkey'], 'Encoding.BECH32')}")
-            print(f">> Event on snort.social: https://snort.social/e/{PublicKey.hex_to_bech32(message_json[2]['id'], 'Encoding.BECH32')}")
+        # if message_json[0] == "EVENT":
+        #     print(f"\n>> Poster's profile on snort.social: https://snort.social/p/{PublicKey.hex_to_bech32(message_json[2]['pubkey'], 'Encoding.BECH32')}")
+        #     print(f">> Event on snort.social: https://snort.social/e/{PublicKey.hex_to_bech32(message_json[2]['id'], 'Encoding.BECH32')}")
         #     append_json(message_json)
 
         if message_type == RelayMessageType.EVENT:
