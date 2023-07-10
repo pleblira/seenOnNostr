@@ -13,7 +13,6 @@ from ..bindings._rust import (
     check_pkcs7_padding,
 )
 
-
 class PaddingContext(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def update(self, data: bytes) -> bytes:
