@@ -11,3 +11,4 @@ websockets==11.0.3
 wsaccel==0.6.4
 websocket-client==1.6.1
 secp256k1==0.14.0
+cryptography==41.0.1
