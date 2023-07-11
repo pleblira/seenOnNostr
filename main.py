@@ -59,7 +59,7 @@ def query_nostr_relays(type_of_query, query_term, since=0):
   return relay_manager.message_pool
 
 def seenOnNostr(start_time_for_first_run = 0):
-  print("running seenOnNostr")
+  print("\n*****\n"+datetime.now().isoformat()+": running seenOnNostr")
 
   with open('events.json', 'r') as f:
     events = json.load(f)
@@ -141,10 +141,12 @@ def seenOnNostr(start_time_for_first_run = 0):
               with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
                   temp_media_file.write(downloaded_media.content)
 
-              api = tweepy.API(auth)
-              media = api.media_upload(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
-
-              media_list.append(media.media_id_string)
+              try:
+                api = tweepy.API(auth)
+                media = api.media_upload(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
+                media_list.append(media.media_id_string)
+              except:
+                print('error uploading media '+ note_media_urls[index]["url"] + " - skipping this media file")
           
           nostr_display_name = query_user_display_name(individual_event_message.event.json[2]['pubkey'])
           tweet_message = "from: "+nostr_display_name+" ("+PublicKey.hex_to_bech32(individual_event_message.event.json[2]['pubkey'],"Encoding.BECH32")+")\n\n"
