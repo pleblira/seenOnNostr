@@ -2,7 +2,7 @@ import secrets
 import base64
 import secp256k1
 from cffi import FFI
-from ..cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
 from hashlib import sha256
 
