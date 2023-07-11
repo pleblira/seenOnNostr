@@ -165,8 +165,8 @@ def seenOnNostr(start_time_for_first_run = 0):
 
   with open('events.json', 'r') as f:
     events = json.load(f)
-    for event in events:z
-    if datetime.fromisoformat(event[3]['datetime_event_was_queried']).timestamp() > last_time_checked:
+    for event in events:
+      if datetime.fromisoformat(event[3]['datetime_event_was_queried']).timestamp() > last_time_checked:
         print("new event found on json")
         
   #       # post_note(private_key, "content todo", [["e",event[2]['id']]])
