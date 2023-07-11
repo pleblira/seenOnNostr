@@ -29,5 +29,482 @@
         {
             "datetime_event_was_queried": "2023-07-10T18:09:13.392660"
         }
+    ],
+    [
+        "EVENT",
+        "727bd8221fee11ee97e6804a14673ee3",
+        {
+            "content": "this deserves a #relaytotwitter",
+            "created_at": 1689075884,
+            "id": "27065f4e3c81631b7c15033707502e88b0c7812c8f56a42af58cd33a6ce58bdd",
+            "kind": 1,
+            "pubkey": "fc87d30789d8a534b59073d602d9d32070b71b903ccae89cfcbd9a7bfa2110be",
+            "sig": "f560c3423e3290ff1271c8a22c50c9ab47db34ef79d4e7939cd6738daf8f33de53a2579f3ea5a1c572bb6a27db3c27e92ad18b0e77c3a0a9f2894f406f5c4a74",
+            "tags": [
+                [
+                    "e",
+                    "e518a2832c68e12ae3604fcd6b483310864c63e19a0bd3c3ff0ad80b0513d744",
+                    "",
+                    "reply"
+                ],
+                [
+                    "p",
+                    "1577e4599dd10c863498fe3c20bd82aafaf829a595ce83c5cf8ac3463531b09b"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:26:09.866656"
+        }
+    ],
+    [
+        "EVENT",
+        "ad3c79301fee11ee8c89804a14673ee3",
+        {
+            "content": "test #relaytotwitter",
+            "created_at": 1689081973,
+            "id": "774a9d664b3483eb73189794b025aacd1a1408b67699c3bb19a39f519cff58c7",
+            "kind": 1,
+            "pubkey": "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a",
+            "sig": "711f3fef919c6e36bf6e6b54d0dc4318405a6eeeacb0d2799d77fb00d41acd9964d86c0a6b11e8a06cc9fa4608fea11e1b37cc0d1edc5fd5691d7dac56557a49",
+            "tags": [
+                [
+                    "e",
+                    "8069d411c5f072c84e17abaa67350f8c015c531601e0ffac27928ada83855aa0",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:27:48.897139"
+        }
+    ],
+    [
+        "EVENT",
+        "b292ad3e1ff111eea7e5804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1689024230,
+            "id": "7b786c87023e21ef7ce9658302bbf1419d83625dc774e74767d75f90787fa64e",
+            "kind": 1,
+            "pubkey": "fc87d30789d8a534b59073d602d9d32070b71b903ccae89cfcbd9a7bfa2110be",
+            "sig": "f4101f9423b056651fe25a26bc046ff2d3fc3f62cd1db9941e4c4cffe0f69268c75c3959837a9c53bd4856b11149d361c9f2d0aeb2d26e2c5bf87090ae37bc33",
+            "tags": [
+                [
+                    "e",
+                    "e96d3052ddc89b1bd181471c7c562f5791dc18d059da127326b6821f97313874",
+                    "",
+                    "reply"
+                ],
+                [
+                    "p",
+                    "1577e4599dd10c863498fe3c20bd82aafaf829a595ce83c5cf8ac3463531b09b"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:49:25.931177"
+        }
+    ],
+    [
+        "EVENT",
+        "b292ad3e1ff111eea7e5804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1689006337,
+            "id": "9f3a997607177fc700d401c2d66cf4666803dbde0403bb4836e5c2fad10e4360",
+            "kind": 1,
+            "pubkey": "fc87d30789d8a534b59073d602d9d32070b71b903ccae89cfcbd9a7bfa2110be",
+            "sig": "8c54d7a7267a4c0ec66b1c06ea7780d2504db93a82e04ddca5618c9d43420aa30c54591e53dcbbce92ff46a61df69d9de7a81daa0fdcb0d9f84bf8210c849ead",
+            "tags": [
+                [
+                    "e",
+                    "5ceb82a7517940a3d025f13151e98b3bbf2465c4d188b24e82cb0c870c65212f",
+                    "",
+                    "reply"
+                ],
+                [
+                    "p",
+                    "04c915daefee38317fa734444acee390a8269fe5810b2241e5e6dd343dfbecc9"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:49:52.561981"
+        }
+    ],
+    [
+        "EVENT",
+        "b292ad3e1ff111eea7e5804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1689000121,
+            "id": "24c743d555179578236b21d5a1169f8855248381a705b4764a150b469a751826",
+            "kind": 1,
+            "pubkey": "fc87d30789d8a534b59073d602d9d32070b71b903ccae89cfcbd9a7bfa2110be",
+            "sig": "997134dca81e5a37ff996825eb0b50c412026def3769f8ca7ee288ffe111bcd2e82ab8b0ede1a5a9dd70c67a5f90ad00f282e4c3bcf3c7f82b273eece3c7efc7",
+            "tags": [
+                [
+                    "e",
+                    "05fc04abd8f5744885b4257f4eda5300db61e5dd808702458c300a2de091e8be",
+                    "",
+                    "reply"
+                ],
+                [
+                    "p",
+                    "32e1827635450ebb3c5a7d12c1f8e7b2b514439ac10a67eef3d9fd9c5c68e245"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:50:17.363578"
+        }
+    ],
+    [
+        "EVENT",
+        "b292ad3e1ff111eea7e5804a14673ee3",
+        {
+            "content": "oh hey there hello #relaytotwitter",
+            "created_at": 1689049406,
+            "id": "72b3ede21b8851b9f841b856f4ff3383936c925915edf447b98a5b4aa02d5f9d",
+            "kind": 1,
+            "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f",
+            "sig": "c76ffecb6e42719731b43f328bb80ac164eecb8d2c17f650f6cf1834a637936945592f3142c5a8186492b7b241e5299ee61d095cbcf14e83e1a93f9dae825285",
+            "tags": [
+                [
+                    "e",
+                    "0157f0de2d910e36bde86a270fceb65c8c0bcae1af48da5bde7d96d3b1373c04",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:50:42.868086"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "testing #relaytotwitter in the morning",
+            "created_at": 1689075453,
+            "id": "68780a95201d2389436628dced77fc0a7f7a6b82af9d9cd29be3fcb0e1aa2e20",
+            "kind": 1,
+            "pubkey": "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a",
+            "sig": "23ab5e32ff18666cdcec0c94d66f7c21dc526de0bbada86aa9545a45343c3a7600064f73faa339ca0f92abf646cee87f9a9e15bb9b4bb4e6235c5860a9003f5f",
+            "tags": [
+                [
+                    "e",
+                    "8069d411c5f072c84e17abaa67350f8c015c531601e0ffac27928ada83855aa0",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:51:18.972673"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1688998886,
+            "id": "c96a88bde6a83ce5e70d3aa1ee35e3a85b53fb09aa67d7d02220a2d594688175",
+            "kind": 1,
+            "pubkey": "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a",
+            "sig": "8af1b0382ddb72e2b9268bd0655b5a3c84703d1b382815c87fab1a11bfbc4ae0718a6d47e3918d936f3d486ef737ede7aa00ad003fdf2313846f25d933914298",
+            "tags": [
+                [
+                    "e",
+                    "633a884da5bcf174257bd7055b21744b04fafbb09868a02c5f398b79ac8aa1fb",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "eab0e756d32b80bcd464f3d844b8040303075a13eabc3599a762c9ac7ab91f4f"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:51:43.770524"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1688963384,
+            "id": "de80fd01ee938353b50da980ab02febb8783c09e7b5ac0366089802362209b9a",
+            "kind": 1,
+            "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f",
+            "sig": "2b05b585941239c9a26e59c319d33148c2841c4ff556fe1920a9d22bec64bffa3efcf4dacc7c77c5e447ae5aaaafa296374b1a28b11eae7ebd07e88cd80f8ca8",
+            "tags": [
+                [
+                    "e",
+                    "47d0376033d26ad2f5ba2b9b6ad8cfd766eaa9a6b3daccf4c75c9e972ce21111",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "604e96e099936a104883958b040b47672e0f048c98ac793f37ffe4c720279eb2"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:52:10.932027"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1688962146,
+            "id": "b5166af7937e09185db9b0497121dc8df3f573bd207a2a9b6ad6d0ca489c5048",
+            "kind": 1,
+            "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f",
+            "sig": "ce16fd3d8788214d912f7adef9fbea8eda9ace1def3b8f161c4d03b1669a06e93cb2eac34857fbbeae2e392f511ce4464dad664a28adb6d97f2ff0d6629c4569",
+            "tags": [
+                [
+                    "e",
+                    "79b4d94dabff31b6862a7e7838041ddb14e53e5fbcc41574e470de06fdaf4231",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "f8e6c64342f1e052480630e27e1016dce35fc3a614e60434fef4aa2503328ca9"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:52:35.785433"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1688962026,
+            "id": "35a4d4f84d0f92a89d64a261bcd1135d15d03b27bb3a96fa8d00c85f43518fb2",
+            "kind": 1,
+            "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f",
+            "sig": "7a53d9f5ae49d0d7aa8c76ff9dd9342a1596107e8665f9abf3f1b9bd3886511e4cc942813dae0c4d9710f7deb729fdacf4b4f4f29fef3e53360007e8590d36cd",
+            "tags": [
+                [
+                    "e",
+                    "0157f0de2d910e36bde86a270fceb65c8c0bcae1af48da5bde7d96d3b1373c04",
+                    "",
+                    "root"
+                ],
+                [
+                    "e",
+                    "deb3bf30f83c6fb7d0db995d8adc72293da5dd4b89fe5f86b3f3f9a3b5120f46",
+                    "",
+                    "reply"
+                ],
+                [
+                    "p",
+                    "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:53:01.802886"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1688958809,
+            "id": "cb368a217e21935a6a09b85a9882beaac75e46bbd4ca056e16b1af66ed1baad5",
+            "kind": 1,
+            "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f",
+            "sig": "0848a283f445b9fd34c0586928618b7835252904427248ca39b612d1832a029a2c24ade9da1f588fdf47d603c3e8830570dc472912fc2149ddae75fcfdce269b",
+            "tags": [
+                [
+                    "e",
+                    "0157f0de2d910e36bde86a270fceb65c8c0bcae1af48da5bde7d96d3b1373c04",
+                    "",
+                    "root"
+                ],
+                [
+                    "e",
+                    "deb3bf30f83c6fb7d0db995d8adc72293da5dd4b89fe5f86b3f3f9a3b5120f46",
+                    "",
+                    "reply"
+                ],
+                [
+                    "p",
+                    "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:53:51.545333"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "yo #relaytotwitter",
+            "created_at": 1688958438,
+            "id": "9d7ec168f6a280b9810aa0cd48807128df48258f331d68f0b2e718b3cad91b5a",
+            "kind": 1,
+            "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f",
+            "sig": "14ad2e573d37011ff50bfa933ba89ad6474569817c775379e8995ea7aa3c4aad8ec66b8c856631271d4751abe42193eb3eaae8b8fa31653935cb4b469306cff3",
+            "tags": [
+                [
+                    "e",
+                    "0157f0de2d910e36bde86a270fceb65c8c0bcae1af48da5bde7d96d3b1373c04",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:54:41.869082"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1688956563,
+            "id": "0b77fd4209c6dcb85b6b045843bfb3f419902e1847db206cd6de78d1da21929b",
+            "kind": 1,
+            "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f",
+            "sig": "72240b87f179dd1cb88a05de7551b1685807a35788914fe3a61e108f881e3604b99b147ef94363527df8867fdc8da337b397c8bc1edde78bb3093c3abc711383",
+            "tags": [
+                [
+                    "e",
+                    "b2ec5c8ae30e78c2b76fb08fc4ab5a11b525a9232bb4b099dd5a72a6c8cb3cad",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "f8e6c64342f1e052480630e27e1016dce35fc3a614e60434fef4aa2503328ca9"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:55:08.366842"
+        }
+    ],
+    [
+        "EVENT",
+        "f5f494e81ff111ee8ef7804a14673ee3",
+        {
+            "content": "#relaytotwitter",
+            "created_at": 1688955445,
+            "id": "ba79628cee723da495a3e725f7d885cc37ba804ba50599a01c5e2169bcefc88a",
+            "kind": 1,
+            "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f",
+            "sig": "dd3856f525567e44f2797368dda3f99a2db66c18b016d7f7a16842b3d9dc3912dcb6347a5db93d0bc133bcb3aa18716baafc54812a41dd3c98f411ed5d2c0e1b",
+            "tags": [
+                [
+                    "e",
+                    "6fa83f644745b32b9553493a0d0d4fcdbf2ab9b33c98c9a07f97038060a30df7",
+                    "",
+                    "root"
+                ],
+                [
+                    "p",
+                    "32e1827635450ebb3c5a7d12c1f8e7b2b514439ac10a67eef3d9fd9c5c68e245"
+                ],
+                [
+                    "t",
+                    "relaytotwitter"
+                ]
+            ]
+        },
+        {
+            "datetime_event_was_queried": "2023-07-11T09:55:34.197168"
+        }
     ]
-]
+,["EVENT", "f5f494e81ff111ee8ef7804a14673ee3", {"content": "testing #relaytotwitter", "created_at": 1688954860, "id": "d960c87c1512c470929ddab4805d0fbdda76cffb4dfe1273dfdd3f002fd55429", "kind": 1, "pubkey": "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f", "sig": "f9b2daad4ca7f9d060df8f42d52024228781f3e9e0db13ad2fa3e271eea29d539991ce6c3d1c507019d38bcfcc8e30716bd97d3261f33e5abfbe596b67fad533", "tags": [["e", "dcf6bb1145208a2360db1b83d101eecb3bf240363012478668e483a5138c7131", "", "root"], ["p", "834529034369faf7509d7ea9781c8bfa0b0813c66d78c07e0a7d7d7f9a96166f"], ["t", "relaytotwitter"]]}, {"datetime_event_was_queried": "2023-07-11T09:55:58.889128"}],["EVENT", "c13fde681ff311ee95ff804a14673ee3", {"content": "oh hey there hello #relaytotwitter", "created_at": 1689084142, "id": "b6fc8eec90b08708d3b637dcba70d9c0001f5289d92f15cd6f8545fe8ad134b8", "kind": 1, "pubkey": "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a", "sig": "b1596b541dde74b11f69f85bbaa8624b4da00425b2fb761fbedce4caaecfb830676b3db5245b01782ee729c3652729869f751acb90e9f1e17465bccf03d22efc", "tags": [["e", "8069d411c5f072c84e17abaa67350f8c015c531601e0ffac27928ada83855aa0", "", "root"], ["p", "273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a"], ["t", "relaytotwitter"]]}, {"datetime_event_was_queried": "2023-07-11T10:04:10.031380"}]]

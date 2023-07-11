@@ -60,15 +60,13 @@ def query_nostr_relays(type_of_query, query_term, since=0):
 
 def seenOnNostr(start_time_for_first_run = 0):
   print("\n*****\n"+datetime.now().isoformat()+": running seenOnNostr")
-
-  with open('events.json', 'r') as f:
-    events = json.load(f)
-    # datetime_of_last_queried_event = int(datetime.fromisoformat(events[len(events)-1][3]['datetime_event_was_queried']).timestamp())
-
   with open('last_time_checked.json', 'r') as f:
     times_checked = json.load(f)
     last_time_checked = int(times_checked[0]['checked_time'])
-    print(f'last time checked ISO is {times_checked[0]["checked_time_iso"]}')
+    if start_time_for_first_run != 0:
+      print(f"checking from datetime ISO {datetime.fromtimestamp(start_time_for_first_run).isoformat()}")
+    else:
+      print(f'last time checked ISO is {times_checked[0]["checked_time_iso"]}')
 
   if start_time_for_first_run != 0:
     last_time_checked = start_time_for_first_run
@@ -94,9 +92,19 @@ def seenOnNostr(start_time_for_first_run = 0):
             if event_msg.event.json[0] == "EVENT":
               print(f"\n>> Poster's profile on snort.social: https://snort.social/p/{PublicKey.hex_to_bech32(event_msg.event.json[2]['pubkey'], 'Encoding.BECH32')}")
               print(f">> Event on snort.social: https://snort.social/e/{PublicKey.hex_to_bech32(event_msg.event.json[2]['id'], 'Encoding.BECH32')}")
-            append_json(event_msg = event_msg.event.json)
             has_hashtag = True
-    if has_hashtag == True:
+    new_event = True
+    with open("events.json", "r") as f:
+      events = json.load(f)
+      # additional check to see if event is already in json, hence already responded to
+      for event in events:
+        if event_msg.event.json[2]["id"] == event[2]["id"]:
+          new_event = False
+          print("found event on json, skipping append_json and posting")
+    if new_event == True:
+      print("didn't find event on json, moving forward to append_json and posting")
+    if has_hashtag == True and new_event == True:
+      append_json(event_msg = event_msg.event.json)
     # checking if it's a reply
       for tag in event_msg.event.json[2]["tags"]:
         if "e" in tag:
@@ -159,71 +167,30 @@ def seenOnNostr(start_time_for_first_run = 0):
 
           post_note(private_key=private_key, content=note_response_content, tags=[["e", event_msg.event.json[2]["id"]]])
 
-  print("exited has events")
+
+  print("exited while message.pool.has_events")
     # print(f"{event_msg}\n")
 
 
-  with open('events.json', 'r') as f:
-    events = json.load(f)
-    for event in events:
-      if datetime.fromisoformat(event[3]['datetime_event_was_queried']).timestamp() > last_time_checked:
-        print("new event found on json")
-        
-  #       # post_note(private_key, "content todo", [["e",event[2]['id']]])
-  #       print(f'event public key is {PublicKey.hex_to_bech32(event[2]["id"],"Encoding.BECH32")}')
-
-  #       # checking if event is a reply
-  #       # post to twitter
-  #       if "e" in event[2]["tags"]:
-  #         print("will tweet")
-  #         query_nostr_relays(public_key.hex(), since=datetime_of_last_queried_event, type_of_query="specific_event", query_term=event[2]["id"])
-  #       else:
-  #         print("event is not a reply")
-  
   # updating last time checked for new notes
   with open('last_time_checked.json', 'r+') as f:
     times_checked = json.load(f)
     times_checked.reverse()
-    # times_checked = sorted(times_checked, key=lambda d: d['number_of_checks'], reverse=False)
     times_checked.append({"checked_time":datetime.now().timestamp(), "checked_time_iso": datetime.now().now().isoformat(), "number_of_checks":times_checked[len(times_checked)-1]['number_of_checks']+1})
     if len(times_checked) > 20:
-      # times_checked[:len(times_checked)-5] = ""
       times_checked.pop(0)
     times_checked.reverse()
     f.seek(0)
     f.truncate(0)
     f.write(json.dumps(times_checked, indent=4))
 
-  print("finished updating json")
+  print("finished running seenOnNostr")
 
 if __name__ == "__main__":
-  # with open('events.json','w') as f:
-  #   f.write("[]")
-
-  # how many seconds in the past to retrieve events for first run
-  # since = int(datetime.now().timestamp()-2000)
-
-  # query_nostr_relays(public_key.hex(), since=since, first_run=True, type_of_query="hashtag", query_term=HASHTAG)
-
-  #adding sample event in case initial query brings no results
-  # with open('events.json','r+') as f:
-  #   events = json.load(f)
-  #   if events == []:
-  #     events.append(["EVENT","a98d1b50fd8411edbf29804a14673ee3",{"content": "sample event","created_at": int(datetime.now().timestamp()),"id":"b3fb0066aa7defc45cad1eee9c3b03d49012cf9001c4eb22b04e7010be52fb87","kind": 1,"pubkey":"b76e5023a8fffcc2c3b4bebeb7a2dd6d7676d9c2122753e364b6427ddd065bb7","sig":"fb7baec1aff77c8acde69f524b32da2c8c09cbf8be1ba90d314e964d59296c03eed07c0871c1b7525fff60ce7fee73ef9e80997716c7882ef180267fb73b61c7","tags": []},{"datetime_event_was_queried": datetime.fromtimestamp(datetime.now().timestamp()).isoformat()}])
-  #   f.seek(0)
-  #   f.write(json.dumps(events, indent=4))
-
-  # with open('last_time_checked.json','r+') as f:
-  #   f.write("[]")
-  #   times_checked = []
-  #   times_checked.append({"checked_time": datetime.now().timestamp(), "number_of_checks":0})
-  #   f.seek(0)
-  #   f.write(json.dumps(times_checked, indent=4))
-
   #running main function once
-  # time.sleep(1)
   # seenOnNostr(start_time_for_first_run=1688849212)
-  seenOnNostr()
+  seenOnNostr(start_time_for_first_run=int(datetime.now().timestamp()))
+  # seenOnNostr()
 
   scheduler = BlockingScheduler()
   scheduler.add_job(seenOnNostr, 'interval', seconds=90)
