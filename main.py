@@ -161,11 +161,11 @@ def seenOnNostr(start_time_for_first_run = 0):
 
   print("exited has events")
     # print(f"{event_msg}\n")
-    
+
 
   with open('events.json', 'r') as f:
     events = json.load(f)
-    for event in events:
+    for event in events:z
       if datetime.fromisoformat(event[3]['datetime_event_was_queried']).timestamp() > last_time_checked:
         print("new event found on json")
         
