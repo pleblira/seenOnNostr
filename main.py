@@ -161,6 +161,7 @@ def seenOnNostr(start_time_for_first_run = 0):
 
   print("exited has events")
     # print(f"{event_msg}\n")
+    
 
   with open('events.json', 'r') as f:
     events = json.load(f)
