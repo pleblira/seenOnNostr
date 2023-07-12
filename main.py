@@ -171,15 +171,14 @@ def seenOnNostr(start_time_for_first_run = 0):
           tweet_message_from_section = "from: "+nostr_display_name+" "+PublicKey.hex_to_bech32(individual_event_message.event.json[2]['pubkey'],"Encoding.BECH32")
           tweet_message_link_to_note = "view on Nostr: https://snort.social/e/"+PublicKey.hex_to_bech32(individual_event_message.event.json[2]["id"],"Encoding.BECH32")
 
-
           if len(note_content) > 125:
             # build function to turn long notes into twitter threads
             # tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content[:126], media_list)
-            # turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
             # crop note_content to first 125 chars
-            note_content = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]+"..."
+            note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]+"..."
+            tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content_first_tweet_on_thread+"...", media_list)
+            turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
           else: 
-          # tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content+"\n["+secrets.token_hex(1)+"]", media_list)
             tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content, media_list)
             print(f"tweet id is {tweet_id}")
           note_response_content = "Note relayed to twitter.\nCheck it out here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n."

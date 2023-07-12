@@ -1,17 +1,38 @@
-
+import json
+from tweet_with_apiv2 import *
 
 def turn_long_note_into_twitter_thread_and_post(note_content, tweet_id):
     print(note_content)
 
+    note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]
+    print(note_content_first_tweet_on_thread)
 
+    note_content = note_content.replace(note_content_first_tweet_on_thread,"").strip()
+    print(note_content)
 
+    thread_tweet_list= json.loads("[]")
+    tweet_number = 1
+    while len(note_content) > 262:
+        cropping_and_respecting_words = note_content[:262]+note_content[262:262+note_content[262:].find(" ")]
+        note_content = note_content.replace(cropping_and_respecting_words, "").strip()
+        if len(note_content) > 262:
+            cropping_and_respecting_words += " /"
+        thread_tweet_list.append({"tweet_number":tweet_number, "tweet_message":cropping_and_respecting_words, "tweet_length":len(cropping_and_respecting_words)})
+        tweet_number += 1
+    if note_content != "":
+        thread_tweet_list.append({"tweet_number":tweet_number, "tweet_message":note_content[:251]})
 
+    print(json.dumps(thread_tweet_list, indent=4))
 
-
-
-
-
-
+    for tweet in thread_tweet_list:
+        print(tweet_id)
+        tweet_id = tweet_with_apiv2(tweet["tweet_message"], media_list=[], in_reply_to_tweet_id=tweet_id)
 
 if __name__ == "__main__":
-    turn_long_note_into_twitter_thread_and_post("0testing 1testing 2testing 3testing 4testing 5testing 6testing 7testing 8testing 9testing 10testing 11testing 12testing 13testing 14testing 15testing 16testing 17testing 18testing 19testing 20testing 21testing 22testing 23testing 24testing 25testing 26testing 27testing 28testing 29testing 30testing 31testing 32testing 33testing 34testing 35testing 36testing 37testing 38testing 39testing 40testing 41testing 42testing 43testing 44testing 45testing 46testing 47testing 48testing 49testing 50testing 51testing 52testing 53testing 54testing 55testing 56testing 57testing 58testing 59testing 60testing 61testing 62testing 63testing 64testing 65testing 66testing 67testing 68testing 69testing 70testing 71testing 72testing 73testing 74testing 75testing 76testing 77testing 78testing 79testing", 1)
+    string = "0testing "
+
+    for number in range(1,80):
+        string += str(number)+"testing "
+
+    turn_long_note_into_twitter_thread_and_post(string, "1678730354470064130")
+    # 1678730354470064130
