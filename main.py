@@ -12,7 +12,6 @@ import tweepy
 import secrets
 import ffmpeg
 
-
 from append_json import *
 from apscheduler.schedulers.blocking import BlockingScheduler
 from dotenv import find_dotenv
@@ -49,7 +48,7 @@ def query_nostr_relays(type_of_query, query_term, since=0):
   time.sleep(1.25) # allow the connections to open
   message = json.dumps(request)
   relay_manager.publish_message(message)
-  time.sleep(2) # allow the messages to send
+  time.sleep(20) # allow the messages to send
 
   relay_manager.close_connections()
 
@@ -84,10 +83,10 @@ def seenOnNostr(start_time_for_first_run = 0):
     f.truncate(0)
     f.write(json.dumps(times_checked, indent=4))
 
-  # message_pool_relay_manager_hashtag = query_nostr_relays(since=last_time_checked, type_of_query="hashtag", query_term=HASHTAG)
+  message_pool_relay_manager_hashtag = query_nostr_relays(since=last_time_checked, type_of_query="hashtag", query_term=HASHTAG)
   # message_pool_relay_manager_hashtag = query_nostr_relays(since=1688831890, type_of_query="hashtag", query_term=HASHTAG)
   # message_pool_relay_manager_hashtag = query_nostr_relays(since=last_time_checked, type_of_query="user_tag", query_term="273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a")
-  message_pool_relay_manager_hashtag = query_nostr_relays(since=1688829988, type_of_query="individual_event", query_term="5315b4b3a8ccce6ea60f153c50d78bfeb8c808228837c623e059c51ed478a2a6")
+  # message_pool_relay_manager_hashtag = query_nostr_relays(since=1688829988, type_of_query="individual_event", query_term="5315b4b3a8ccce6ea60f153c50d78bfeb8c808228837c623e059c51ed478a2a6")
   # message_pool_relay_manager_hashtag = query_nostr_relays(since=1688829988, type_of_query="individual_event", query_term="a9e34d3180183009b956370a07457f146a73bc722b0f81d18b83b76782acda66")
   
   print("queried nostr relays")
@@ -149,9 +148,7 @@ def seenOnNostr(start_time_for_first_run = 0):
                 else:
                     print('still has media on content')
             print(note_media_urls)
-
-                
-
+        
             # first using tweepy to upload media to twitter
             auth = tweepy.OAuth1UserHandler(
               consumer_key,
@@ -213,7 +210,7 @@ if __name__ == "__main__":
   seenOnNostr(start_time_for_first_run=int(datetime.now().timestamp()))
   # seenOnNostr()
 
-  # scheduler = BlockingScheduler()
-  # scheduler.add_job(seenOnNostr, 'interval', seconds=90)
-  # print('\nstarting scheduler')
-  # scheduler.start()
+  scheduler = BlockingScheduler()
+  scheduler.add_job(seenOnNostr, 'interval', seconds=90)
+  print('\nstarting scheduler')
+  scheduler.start()
