@@ -19,6 +19,7 @@ def tweet_with_apiv2(tweet_message, media_list, in_reply_to_tweet_id = ""):
     # payload = {"text": tweet_message, "reply":{"in_reply_to_tweet_id":str(scraped_tweet['id']), "exclude_reply_user_ids": exclude_reply_user_ids}}
     payload = {"text": tweet_message}
     if media_list != []:
+        payload["media"] = {}
         payload["media"]["media_ids"] = media_list
     if in_reply_to_tweet_id != "":
         payload["reply"] = {}
