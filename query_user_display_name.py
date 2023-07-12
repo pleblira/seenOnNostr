@@ -42,7 +42,7 @@ def query_user_display_name(author_pubkey):
       print("user doesn't have name, querying name from display_name field")
       display_name = event_msg.event.json[2]['content']
       display_name = display_name[display_name.find('"name":"')+18:]
-      display_name = display_name[:display_name.find('"')-1]
+      display_name = display_name[:display_name.find('"')]
     else:
       display_name = "no display name"
     # print("|"+display_name+"|")
@@ -51,6 +51,7 @@ def query_user_display_name(author_pubkey):
   relay_manager.close_connections()
   return display_name
 
-# if __name__=="__main__":
-#    query_user_display_name(PublicKey.from_npub("npub1cq47m26ft2xh8c33jtapvxstsdzgy86gg35prv0gzravvk6cfaysa9sukg").hex())
-#    query_user_display_name(PublicKey.from_npub("npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9").hex())
+if __name__=="__main__":
+   query_user_display_name(PublicKey.from_npub("npub1lcuv50xazj28schntnvdjehlk23d7nfxdhgpae8xukagxutxx66skdve2z").hex())
+   query_user_display_name(PublicKey.from_npub("npub1cq47m26ft2xh8c33jtapvxstsdzgy86gg35prv0gzravvk6cfaysa9sukg").hex())
+   query_user_display_name(PublicKey.from_npub("npub1sn0wdenkukak0d9dfczzeacvhkrgz92ak56egt7vdgzn8pv2wfqqhrjdv9").hex())

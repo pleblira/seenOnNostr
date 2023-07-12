@@ -11,6 +11,8 @@ import time
 import tweepy
 import secrets
 import ffmpeg
+import sys
+
 
 from append_json import *
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -23,12 +25,25 @@ from python_nostr_package.nostr import RelayManager
 from set_query_filters import *
 from store_stackjoin import *
 from tweet_with_apiv2 import *
-from long_note_into_twitter_thread import *
+from turn_long_note_into_twitter_thread import *
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
 
+class MyStdErr(object):
+
+  stderr = sys.stderr
+  waserr = False
+
+  def print(self, text):
+      self.waserr = True
+      self.stderr.print(text)
+
+consumer_key = os.environ.get("CONSUMER_KEY")
+consumer_secret = os.environ.get("CONSUMER_SECRET")
+access_token = os.environ.get("ACCESS_TOKEN")
+access_token_secret = os.environ.get("ACCESS_TOKEN_SECRET")
 public_key = PublicKey.from_npub(os.environ.get("PUBLIC_KEY"))
 private_key = PrivateKey.from_nsec(os.environ.get("PRIVATE_KEY"))
 HASHTAG = "relaytotwitter"
@@ -171,32 +186,39 @@ def seenOnNostr(start_time_for_first_run = 0):
                 with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
                     temp_media_file.write(downloaded_media.content)
                 
-              try:
-                api = tweepy.API(auth)
-                print(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
-                media = api.media_upload(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
-                media_list.append(media.media_id_string)
-                print('media file ' + note_media_urls[index]["url"] + " uploaded successfully")
-              except:
-                print('error uploading media '+ note_media_urls[index]["url"] + " - skipping this media file")
+              # try:
+              api = tweepy.API(auth)
+              print(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
+              media = api.media_upload(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
+              media_list.append(media.media_id_string)
+              print('media file ' + note_media_urls[index]["url"] + " uploaded successfully. media_id_string = "+media.media_id_string)
+              # except:
+                # print('error uploading media '+ note_media_urls[index]["url"] + " - skipping this media file")
           
           nostr_display_name = query_user_display_name(individual_event_message.event.json[2]['pubkey'])[:20]
           tweet_message_from_section = "from: "+nostr_display_name+" "+PublicKey.hex_to_bech32(individual_event_message.event.json[2]['pubkey'],"Encoding.BECH32")
           tweet_message_link_to_note = "view on Nostr: https://snort.social/e/"+PublicKey.hex_to_bech32(individual_event_message.event.json[2]["id"],"Encoding.BECH32")
 
-          if len(note_content) > 125:
-            # build function to turn long notes into twitter threads
-            # tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content[:126], media_list)
-            # crop note_content to first 125 chars
-            note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]
-            tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content_first_tweet_on_thread+" /", media_list)
-            turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
-          else: 
-          # tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content+"\n["+secrets.token_hex(1)+"]", media_list)
-            tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content, media_list)
-            print(f"tweet id is {tweet_id}")
-          note_response_content = "note relayed to twitter.\nview here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n."
+          # first trying with media_list, if errors, tweets without image
+          try: 
+            if len(note_content) > 125:
+              note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]
+              tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content_first_tweet_on_thread+" /", media_list)
+              turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
+            else: 
+              tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content, media_list)
+              print(f"tweet id is {tweet_id}")
+          except: 
+            print("error sending tweet with media")
+            if len(note_content) > 125:
+              note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]
+              tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n(video accessible on Nostr⬆️)\n\n"+note_content_first_tweet_on_thread+" /", media_list = [])
+              turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
+            else: 
+              tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n(video accessible on Nostr⬆️)\n\n"+note_content, media_list = [])
+              print(f"tweet id is {tweet_id}")
 
+          note_response_content = "note relayed to twitter.\nview here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n."
           post_note(private_key=private_key, content=note_response_content, tags=[["e", event_msg.event.json[2]["id"]]])
 
   print("exited while message.pool.has_events")
@@ -205,6 +227,7 @@ def seenOnNostr(start_time_for_first_run = 0):
   print("finished running seenOnNostr")
 
 if __name__ == "__main__":
+  sys.stderr = MyStdErr()
   #running main function once
   # seenOnNostr(start_time_for_first_run=1688849212)
   seenOnNostr(start_time_for_first_run=int(datetime.now().timestamp()))
