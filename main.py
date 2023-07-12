@@ -22,6 +22,7 @@ from python_nostr_package.nostr import RelayManager
 from set_query_filters import *
 from store_stackjoin import *
 from tweet_with_apiv2 import *
+from long_note_into_twitter_thread import *
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -63,13 +64,23 @@ def seenOnNostr(start_time_for_first_run = 0):
   with open('last_time_checked.json', 'r') as f:
     times_checked = json.load(f)
     last_time_checked = int(times_checked[0]['checked_time'])
-    if start_time_for_first_run != 0:
-      print(f"checking from datetime ISO {datetime.fromtimestamp(start_time_for_first_run).isoformat()}")
-    else:
-      print(f'last time checked ISO is {times_checked[0]["checked_time_iso"]}')
-
   if start_time_for_first_run != 0:
     last_time_checked = start_time_for_first_run
+    print(f"checking from datetime ISO {datetime.fromtimestamp(start_time_for_first_run).isoformat()}")
+  else:
+    print(f'last time checked ISO is {times_checked[0]["checked_time_iso"]}')
+
+  # updating last time checked for new notes
+  with open('last_time_checked.json', 'r+') as f:
+    times_checked = json.load(f)
+    times_checked.reverse()
+    times_checked.append({"checked_time":datetime.now().timestamp(), "checked_time_iso": datetime.now().now().isoformat(), "number_of_checks":times_checked[len(times_checked)-1]['number_of_checks']+1})
+    if len(times_checked) > 20:
+      times_checked.pop(0)
+    times_checked.reverse()
+    f.seek(0)
+    f.truncate(0)
+    f.write(json.dumps(times_checked, indent=4))
 
   message_pool_relay_manager_hashtag = query_nostr_relays(since=last_time_checked, type_of_query="hashtag", query_term=HASHTAG)
   # message_pool_relay_manager_hashtag = query_nostr_relays(since=1688831890, type_of_query="hashtag", query_term=HASHTAG)
@@ -93,10 +104,10 @@ def seenOnNostr(start_time_for_first_run = 0):
               print(f"\n>> Poster's profile on snort.social: https://snort.social/p/{PublicKey.hex_to_bech32(event_msg.event.json[2]['pubkey'], 'Encoding.BECH32')}")
               print(f">> Event on snort.social: https://snort.social/e/{PublicKey.hex_to_bech32(event_msg.event.json[2]['id'], 'Encoding.BECH32')}")
             has_hashtag = True
+    # additional check to see if event is already in json, hence already responded to
     new_event = True
     with open("events.json", "r") as f:
       events = json.load(f)
-      # additional check to see if event is already in json, hence already responded to
       for event in events:
         if event_msg.event.json[2]["id"] == event[2]["id"]:
           new_event = False
@@ -108,7 +119,7 @@ def seenOnNostr(start_time_for_first_run = 0):
     # checking if it's a reply
       for tag in event_msg.event.json[2]["tags"]:
         if "e" in tag:
-          print("note is a reply, trying to query note")
+          print("note is a reply, querying original note")
           message_pool_relay_manager_individual_event = query_nostr_relays(since=last_time_checked, type_of_query="individual_event", query_term=tag[1])
           individual_event_message = message_pool_relay_manager_individual_event.get_event()
 
@@ -119,17 +130,17 @@ def seenOnNostr(start_time_for_first_run = 0):
           with open('image_filetypes.txt', 'r') as f:
             for line in f:
               image_filetypes.append(line.strip())
-          content = individual_event_message.event.json[2]["content"]
-          if any(filetype in content for filetype in image_filetypes):
+          note_content = individual_event_message.event.json[2]["content"]
+          if any(filetype in note_content for filetype in image_filetypes):
             print('has image')
             has_image_on_content = True
             while has_image_on_content == True:
-                image_url, filename = extract_image_url_from_content(content, image_filetypes)
+                image_url, filename = extract_image_url_from_content(note_content, image_filetypes)
                 note_media_urls.append({"url":image_url,'filename':filename})
                 # content with image_url replaced to check again
-                content = content.replace(image_url,"")
+                note_content = note_content.replace(image_url,"")
                 # print(extract_image_url_from_content(content))
-                if not any(filetype in content for filetype in image_filetypes):
+                if not any(filetype in note_content for filetype in image_filetypes):
                     has_image_on_content = False
                     print('has image on content false')
                 else:
@@ -156,33 +167,27 @@ def seenOnNostr(start_time_for_first_run = 0):
               except:
                 print('error uploading media '+ note_media_urls[index]["url"] + " - skipping this media file")
           
-          nostr_display_name = query_user_display_name(individual_event_message.event.json[2]['pubkey'])
-          tweet_message = "from: "+nostr_display_name+" ("+PublicKey.hex_to_bech32(individual_event_message.event.json[2]['pubkey'],"Encoding.BECH32")+")\n\n"
-          
-          if len(content) > 120:
-            content = content[:120]+content[120:120+content[120:].find(" ")]+"..."
-          tweet_id = tweet_with_apiv2(tweet_message+content+"\n\nCheck it out on Nostr: https://snort.social/e/"+PublicKey.hex_to_bech32(individual_event_message.event.json[2]["id"],"Encoding.BECH32")+" ["+secrets.token_hex(1)+"]", media_list)
-          print(f"tweet id is {tweet_id}")
-          note_response_content = "Note posted to twitter.\nCheck it out here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n\n."
+          nostr_display_name = query_user_display_name(individual_event_message.event.json[2]['pubkey'])[:14]
+          tweet_message_from_section = "from: "+nostr_display_name+" "+PublicKey.hex_to_bech32(individual_event_message.event.json[2]['pubkey'],"Encoding.BECH32")
+          tweet_message_link_to_note = "view on Nostr: https://snort.social/e/"+PublicKey.hex_to_bech32(individual_event_message.event.json[2]["id"],"Encoding.BECH32")
+
+
+          if len(note_content) > 125:
+            # build function to turn long notes into twitter threads
+            # tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content[:126], media_list)
+            # turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
+            # crop note_content to first 125 chars
+            note_content = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]+"..."
+          else: 
+          # tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content+"\n["+secrets.token_hex(1)+"]", media_list)
+            tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content, media_list)
+            print(f"tweet id is {tweet_id}")
+          note_response_content = "Note relayed to twitter.\nCheck it out here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n."
 
           post_note(private_key=private_key, content=note_response_content, tags=[["e", event_msg.event.json[2]["id"]]])
 
-
   print("exited while message.pool.has_events")
     # print(f"{event_msg}\n")
-
-
-  # updating last time checked for new notes
-  with open('last_time_checked.json', 'r+') as f:
-    times_checked = json.load(f)
-    times_checked.reverse()
-    times_checked.append({"checked_time":datetime.now().timestamp(), "checked_time_iso": datetime.now().now().isoformat(), "number_of_checks":times_checked[len(times_checked)-1]['number_of_checks']+1})
-    if len(times_checked) > 20:
-      times_checked.pop(0)
-    times_checked.reverse()
-    f.seek(0)
-    f.truncate(0)
-    f.write(json.dumps(times_checked, indent=4))
 
   print("finished running seenOnNostr")
 
