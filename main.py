@@ -182,7 +182,7 @@ def seenOnNostr(start_time_for_first_run = 0):
           # tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content+"\n["+secrets.token_hex(1)+"]", media_list)
             tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content, media_list)
             print(f"tweet id is {tweet_id}")
-          note_response_content = "Note relayed to twitter.\nCheck it out here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n."
+          note_response_content = "note relayed to twitter.\nview here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n."
 
           post_note(private_key=private_key, content=note_response_content, tags=[["e", event_msg.event.json[2]["id"]]])
 
