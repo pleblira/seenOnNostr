@@ -9,3 +9,4 @@ websockets==11.0.3
 websocket-client==1.6.1
 secp256k1==0.14.0
 cryptography==41.0.1
+ffmpeg-python==0.2.0

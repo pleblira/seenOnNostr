@@ -10,6 +10,8 @@ import ssl
 import time
 import tweepy
 import secrets
+import ffmpeg
+
 
 from append_json import *
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -47,7 +49,7 @@ def query_nostr_relays(type_of_query, query_term, since=0):
   time.sleep(1.25) # allow the connections to open
   message = json.dumps(request)
   relay_manager.publish_message(message)
-  time.sleep(20) # allow the messages to send
+  time.sleep(2) # allow the messages to send
 
   relay_manager.close_connections()
 
@@ -82,10 +84,11 @@ def seenOnNostr(start_time_for_first_run = 0):
     f.truncate(0)
     f.write(json.dumps(times_checked, indent=4))
 
-  message_pool_relay_manager_hashtag = query_nostr_relays(since=last_time_checked, type_of_query="hashtag", query_term=HASHTAG)
+  # message_pool_relay_manager_hashtag = query_nostr_relays(since=last_time_checked, type_of_query="hashtag", query_term=HASHTAG)
   # message_pool_relay_manager_hashtag = query_nostr_relays(since=1688831890, type_of_query="hashtag", query_term=HASHTAG)
   # message_pool_relay_manager_hashtag = query_nostr_relays(since=last_time_checked, type_of_query="user_tag", query_term="273e5c07475e1edea1a60b762336fdd7a37a2b845f137d524a0460f9f0c44c4a")
-  # message_pool_relay_manager_hashtag = query_nostr_relays(since=1688829988, type_of_query="individual_event", query_term="799f8ffe1e596454b39318b5475b435084f9f086d709f436f7f06ae8ec09a47e")
+  message_pool_relay_manager_hashtag = query_nostr_relays(since=1688829988, type_of_query="individual_event", query_term="5315b4b3a8ccce6ea60f153c50d78bfeb8c808228837c623e059c51ed478a2a6")
+  # message_pool_relay_manager_hashtag = query_nostr_relays(since=1688829988, type_of_query="individual_event", query_term="a9e34d3180183009b956370a07457f146a73bc722b0f81d18b83b76782acda66")
   
   print("queried nostr relays")
  
@@ -142,10 +145,12 @@ def seenOnNostr(start_time_for_first_run = 0):
                 # print(extract_image_url_from_content(content))
                 if not any(filetype in note_content for filetype in image_filetypes):
                     has_image_on_content = False
-                    print('has image on content false')
+                    print('no more media ')
                 else:
-                    print('still has image on content')
+                    print('still has media on content')
             print(note_media_urls)
+
+                
 
             # first using tweepy to upload media to twitter
             auth = tweepy.OAuth1UserHandler(
@@ -157,13 +162,24 @@ def seenOnNostr(start_time_for_first_run = 0):
 
             for index, media in enumerate(note_media_urls):
               downloaded_media = requests.get(media["url"])
-              with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
-                  temp_media_file.write(downloaded_media.content)
+              if media["url"][media["url"].rfind(".")+1:] == "mov":
+                print("found .mov file. Downloading and converting to mp4")
+                with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
+                    temp_media_file.write(downloaded_media.content)
+                input_video = ffmpeg.input(str(index)+".mov")
+                ffmpeg.output(input_video, str(index)+".mp4").global_args('-y').run(quiet=True)
+                media["filename"] = str(index)+".mp4"
 
+              if media["url"][media["url"].rfind(".")+1:] != "mov":
+                with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
+                    temp_media_file.write(downloaded_media.content)
+                
               try:
                 api = tweepy.API(auth)
+                print(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
                 media = api.media_upload(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
                 media_list.append(media.media_id_string)
+                print('media file ' + note_media_urls[index]["url"] + " uploaded successfully")
               except:
                 print('error uploading media '+ note_media_urls[index]["url"] + " - skipping this media file")
           
@@ -197,7 +213,7 @@ if __name__ == "__main__":
   seenOnNostr(start_time_for_first_run=int(datetime.now().timestamp()))
   # seenOnNostr()
 
-  scheduler = BlockingScheduler()
-  scheduler.add_job(seenOnNostr, 'interval', seconds=90)
-  print('\nstarting scheduler')
-  scheduler.start()
+  # scheduler = BlockingScheduler()
+  # scheduler.add_job(seenOnNostr, 'interval', seconds=90)
+  # print('\nstarting scheduler')
+  # scheduler.start()
