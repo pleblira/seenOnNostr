@@ -31,15 +31,6 @@ ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
 
-class MyStdErr(object):
-
-  stderr = sys.stderr
-  waserr = False
-
-  def print(self, text):
-      self.waserr = True
-      self.stderr.print(text)
-
 consumer_key = os.environ.get("CONSUMER_KEY")
 consumer_secret = os.environ.get("CONSUMER_SECRET")
 access_token = os.environ.get("ACCESS_TOKEN")
@@ -110,6 +101,8 @@ def seenOnNostr(start_time_for_first_run = 0):
     event_msg = message_pool_relay_manager_hashtag.get_event()
     print("\n\n___________NEW_EVENT__________")
     print(f"event.json: {event_msg.event.json}")
+
+    # double-checking for HASHTAG
     has_hashtag = False
     for tag in event_msg.event.json[2]["tags"]:
       if "t" in tag:
@@ -121,6 +114,7 @@ def seenOnNostr(start_time_for_first_run = 0):
               print(f"\n>> Poster's profile on snort.social: https://snort.social/p/{PublicKey.hex_to_bech32(event_msg.event.json[2]['pubkey'], 'Encoding.BECH32')}")
               print(f">> Event on snort.social: https://snort.social/e/{PublicKey.hex_to_bech32(event_msg.event.json[2]['id'], 'Encoding.BECH32')}")
             has_hashtag = True
+
     # additional check to see if event is already in json, hence already responded to
     new_event = True
     with open("events.json", "r") as f:
@@ -131,95 +125,117 @@ def seenOnNostr(start_time_for_first_run = 0):
           print("found event on json, skipping append_json and posting")
     if new_event == True:
       print("didn't find event on json, moving forward to append_json and posting")
+
     if has_hashtag == True and new_event == True:
       append_json(event_msg = event_msg.event.json)
-    # checking if it's a reply
+
+    # upon confirming it's a new event, checking if it's a reply or a new note
+      non_mention_e_tags = []
       for tag in event_msg.event.json[2]["tags"]:
         if "e" in tag:
-          print("note is a reply, querying original note")
-          message_pool_relay_manager_individual_event = query_nostr_relays(since=last_time_checked, type_of_query="individual_event", query_term=tag[1])
-          individual_event_message = message_pool_relay_manager_individual_event.get_event()
+          for marker in tag:
+            if "mention" not in marker:
+              non_mention_e_tags.append(tag)
+      if len(non_mention_e_tags) == 1:
+        print("single non_mention tag, means it's the reply")
+        query_term = non_mention_e_tags[1]
+      else:
+        # more than 1 non_mention tag, verifying which one is the reply and which one is the root
+        for tag in non_mention_e_tags:
+          if "root" in tag or "reply" in tag:
+            print('using marked "e" tags')
+            if "reply" in tag:
+              query_term = tag[1]
+          else:
+            print('using positional "e" tags')
+            query_term = non_mention_e_tags[1][1]
+      if non_mention_e_tags == []:
+        print("new note")
+        query_term = event_msg.event.json[2]["id"]
 
-          # extracting media
-          note_media_urls = []
-          image_filetypes = []
-          media_list = []
-          with open('image_filetypes.txt', 'r') as f:
-            for line in f:
-              image_filetypes.append(line.strip())
-          note_content = individual_event_message.event.json[2]["content"]
-          if any(filetype in note_content for filetype in image_filetypes):
-            print('has image')
-            has_image_on_content = True
-            while has_image_on_content == True:
-                image_url, filename = extract_image_url_from_content(note_content, image_filetypes)
-                note_media_urls.append({"url":image_url,'filename':filename})
-                # content with image_url replaced to check again
-                note_content = note_content.replace(image_url,"")
-                # print(extract_image_url_from_content(content))
-                if not any(filetype in note_content for filetype in image_filetypes):
-                    has_image_on_content = False
-                    print('no more media ')
-                else:
-                    print('still has media on content')
-            print(note_media_urls)
-        
-            # first using tweepy to upload media to twitter
-            auth = tweepy.OAuth1UserHandler(
-              consumer_key,
-              consumer_secret,
-              access_token,
-              access_token_secret
-            )
+      message_pool_relay_manager_individual_event = query_nostr_relays(since=last_time_checked, type_of_query="individual_event", query_term=query_term)
+      individual_event_message = message_pool_relay_manager_individual_event.get_event()
 
-            for index, media in enumerate(note_media_urls):
-              downloaded_media = requests.get(media["url"])
-              if media["url"][media["url"].rfind(".")+1:] == "mov":
-                print("found .mov file. Downloading and converting to mp4")
-                with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
-                    temp_media_file.write(downloaded_media.content)
-                input_video = ffmpeg.input(str(index)+".mov")
-                ffmpeg.output(input_video, str(index)+".mp4").global_args('-y').run(quiet=True)
-                media["filename"] = str(index)+".mp4"
+      # extracting media
+      note_media_urls = []
+      image_filetypes = []
+      media_list = []
+      with open('image_filetypes.txt', 'r') as f:
+        for line in f:
+          image_filetypes.append(line.strip())
+      note_content = individual_event_message.event.json[2]["content"]
+      if any(filetype in note_content for filetype in image_filetypes):
+        print('has image')
+        has_image_on_content = True
+        while has_image_on_content == True:
+            image_url, filename = extract_image_url_from_content(note_content, image_filetypes)
+            note_media_urls.append({"url":image_url,'filename':filename})
+            # content with image_url replaced to check again
+            note_content = note_content.replace(image_url,"")
+            # print(extract_image_url_from_content(content))
+            if not any(filetype in note_content for filetype in image_filetypes):
+                has_image_on_content = False
+                print('no more media ')
+            else:
+                print('still has media on content')
+        print(note_media_urls)
+    
+        # first using tweepy to upload media to twitter
+        auth = tweepy.OAuth1UserHandler(
+          consumer_key,
+          consumer_secret,
+          access_token,
+          access_token_secret
+        )
 
-              if media["url"][media["url"].rfind(".")+1:] != "mov":
-                with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
-                    temp_media_file.write(downloaded_media.content)
-                
-              # try:
-              api = tweepy.API(auth)
-              print(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
-              media = api.media_upload(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
-              media_list.append(media.media_id_string)
-              print('media file ' + note_media_urls[index]["url"] + " uploaded successfully. media_id_string = "+media.media_id_string)
-              # except:
-                # print('error uploading media '+ note_media_urls[index]["url"] + " - skipping this media file")
-          
-          nostr_display_name = query_user_display_name(individual_event_message.event.json[2]['pubkey'])[:20]
-          tweet_message_from_section = "from: "+nostr_display_name+" "+PublicKey.hex_to_bech32(individual_event_message.event.json[2]['pubkey'],"Encoding.BECH32")
-          tweet_message_link_to_note = "view on Nostr: https://snort.social/e/"+PublicKey.hex_to_bech32(individual_event_message.event.json[2]["id"],"Encoding.BECH32")
+        for index, media in enumerate(note_media_urls):
+          downloaded_media = requests.get(media["url"])
+          if media["url"][media["url"].rfind(".")+1:] == "mov":
+            print("found .mov file. Downloading and converting to mp4")
+            with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
+                temp_media_file.write(downloaded_media.content)
+            input_video = ffmpeg.input(str(index)+".mov")
+            ffmpeg.output(input_video, str(index)+".mp4").global_args('-y').run(quiet=True)
+            media["filename"] = str(index)+".mp4"
 
-          # first trying with media_list, if errors, tweets without image
-          try: 
-            if len(note_content) > 125:
-              note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]
-              tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content_first_tweet_on_thread+" /", media_list)
-              turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
-            else: 
-              tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n\n"+note_content, media_list)
-              print(f"tweet id is {tweet_id}")
-          except: 
-            print("error sending tweet with media")
-            if len(note_content) > 125:
-              note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]
-              tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n(video accessible on Nostr⬆️)\n\n"+note_content_first_tweet_on_thread+" /", media_list = [])
-              turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
-            else: 
-              tweet_id = tweet_with_apiv2(tweet_message_from_section+"\n"+tweet_message_link_to_note+"\n(video accessible on Nostr⬆️)\n\n"+note_content, media_list = [])
-              print(f"tweet id is {tweet_id}")
+          if media["url"][media["url"].rfind(".")+1:] != "mov":
+            with open(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:],'wb') as temp_media_file:
+                temp_media_file.write(downloaded_media.content)
+            
+          # try:
+          api = tweepy.API(auth)
+          print(str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
+          media = api.media_upload(filename=str(index)+"."+media["filename"][media["filename"].rfind(".")+1:])
+          media_list.append(media.media_id_string)
+          print('media file ' + note_media_urls[index]["url"] + " uploaded successfully. media_id_string = "+media.media_id_string)
+          # except:
+            # print('error uploading media '+ note_media_urls[index]["url"] + " - skipping this media file")
+      
+      nostr_display_name = query_user_display_name(individual_event_message.event.json[2]['pubkey'])[:20]
+      from_section_for_tweet_message = "from: "+nostr_display_name+" "+PublicKey.hex_to_bech32(individual_event_message.event.json[2]['pubkey'],"Encoding.BECH32")
+      link_to_note_for_tweet_message = "view on Nostr: https://snort.social/e/"+PublicKey.hex_to_bech32(individual_event_message.event.json[2]["id"],"Encoding.BECH32")
 
-          note_response_content = "note relayed to twitter.\nview here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n."
-          post_note(private_key=private_key, content=note_response_content, tags=[["e", event_msg.event.json[2]["id"]]])
+      # first trying with media_list, if errors, tweets without image
+      try: 
+        if len(note_content) > 125:
+          note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]
+          tweet_id = tweet_with_apiv2(from_section_for_tweet_message+"\n"+link_to_note_for_tweet_message+"\n\n"+note_content_first_tweet_on_thread+" /", media_list)
+          turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
+        else: 
+          tweet_id = tweet_with_apiv2(from_section_for_tweet_message+"\n"+link_to_note_for_tweet_message+"\n\n"+note_content, media_list)
+          print(f"tweet id is {tweet_id}")
+      except: 
+        print("error sending tweet with media")
+        if len(note_content) > 125:
+          note_content_first_tweet_on_thread = note_content[:125]+note_content[125:125+note_content[125:].find(" ")]
+          tweet_id = tweet_with_apiv2(from_section_for_tweet_message+"\n"+link_to_note_for_tweet_message+"\n(video accessible on Nostr⬆️)\n\n"+note_content_first_tweet_on_thread+" /", media_list = [])
+          turn_long_note_into_twitter_thread_and_post(note_content, tweet_id)
+        else: 
+          tweet_id = tweet_with_apiv2(from_section_for_tweet_message+"\n"+link_to_note_for_tweet_message+"\n(video accessible on Nostr⬆️)\n\n"+note_content, media_list = [])
+          print(f"tweet id is {tweet_id}")
+
+      note_response_content = "note relayed to twitter.\nview here: https://www.twitter.com/seenOnNostr/status/"+tweet_id+"\n."
+      post_note(private_key=private_key, content=note_response_content, tags=[["e", event_msg.event.json[2]["id"]]])
 
   print("exited while message.pool.has_events")
     # print(f"{event_msg}\n")
@@ -227,7 +243,6 @@ def seenOnNostr(start_time_for_first_run = 0):
   print("finished running seenOnNostr")
 
 if __name__ == "__main__":
-  sys.stderr = MyStdErr()
   #running main function once
   # seenOnNostr(start_time_for_first_run=1688849212)
   seenOnNostr(start_time_for_first_run=int(datetime.now().timestamp()))
