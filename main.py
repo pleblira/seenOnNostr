@@ -13,7 +13,6 @@ import secrets
 import ffmpeg
 import sys
 
-
 from append_json import *
 from apscheduler.schedulers.blocking import BlockingScheduler
 from dotenv import find_dotenv

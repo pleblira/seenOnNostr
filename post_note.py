@@ -35,4 +35,4 @@ def post_note(private_key, content, tags):
     relay_manager.close_connections()
 
 if __name__ == "__main__":
-    post_note(PrivateKey.from_nsec("nsec1kenpmwxye80zh93ugfq0jyq73hepnk3fhj5rytv8drs4sdsycumq5pg8uz"), "test 123", tags=[["e", "262556c024988d7e76d143533d10c09834d20b69a0595800a713c2684c3be988"]])
+    post_note(PrivateKey.from_nsec(""), "test 123", [])
